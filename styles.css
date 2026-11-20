@@ -1,0 +1,1030 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
+
+/* Chapter & Co. bookstore stylesheet.
+
+   Sections, in source order:
+     1. Design tokens
+     2. Base and utilities
+     3. Header, navigation and hero
+     4. Catalogue and cards
+     5. Wishlist bar and empty state
+     6. Quote, newsletter and footer
+     7. Toast, bag drawer and cart
+     8. Accessibility (focus, hit areas, minimum target sizes)
+     9. Responsive (media queries)
+
+   Breakpoints (custom properties cannot be used inside media queries, so they are listed here):
+     max-width 1024px   hamburger menu replaces the inline category navigation
+     max-width  950px   book grid goes from 4 to 3 columns
+     max-width  700px   single-column hero, 2-column grid, stacked heading and newsletter
+     max-width  480px   header wraps and the search box gets its own row
+     prefers-reduced-motion   no smooth scrolling and no transitions
+     max-width  900px or coarse pointer   44px touch targets
+
+   Order matters: base rules come first, then the media queries in the order above, so the
+   media queries override the base rules at equal specificity. Do not reorder them. */
+
+/* =============================================================================
+   1. Design tokens
+   ============================================================================= */
+
+:root {
+  /* Colours */
+  --green: #254c3c;
+  --cream: #f7f5f0;
+  --ink: #252a27;
+  --muted: #636960;
+  --line: #e6e2d9;
+  --field-border: #84897f;   /* input, select and add-button borders */
+  --error: #9a4f2e;          /* form errors and the bag limit note */
+  --surface-alt: #eae8df;    /* wishlist bar and quote band */
+  /* Fonts */
+  --font-display: "Playfair Display";
+  --font-sans: "DM Sans";
+  /* Stacking: header < bag drawer < toast */
+  --z-header: 5;
+  --z-drawer: 20;
+  --z-toast: 30;
+  /* Minimum target sizes (WCAG 2.5.8 minimum / touch-friendly) */
+  --target-min: 24px;
+  --target-touch: 44px;
+}
+
+/* =============================================================================
+   2. Base and utilities
+   ============================================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-sans), sans-serif;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* =============================================================================
+   3. Header, navigation and hero
+   ============================================================================= */
+
+.announcement {
+  text-align: center;
+  background: var(--green);
+  color: white;
+  padding: 9px;
+  font-size: 12px;
+}
+
+header {
+  height: 76px;
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  background: #f7f5f0f2;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 max(4%,calc((100% - 1200px)/2));
+  gap: 20px;
+}
+
+/* Shared by the header logo and the footer wordmark */
+.brand,
+footer {
+  font: 700 24px var(--font-display);
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.brand span,
+footer span {
+  color: #c8794d;
+}
+
+nav,
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+nav button,
+.actions button {
+  border: 0;
+  background: none;
+  color: #60675f;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+nav button.active {
+  color: var(--green);
+  font-weight: 700;
+}
+
+.actions input {
+  width: 145px;
+  padding: 9px;
+  border: 1px solid var(--field-border);
+  background: transparent;
+  border-radius: 3px;
+}
+
+.actions sup {
+  background: var(--green);
+  color: white;
+  border-radius: 12px;
+  padding: 2px 5px;
+  font-size: 12px;
+  line-height: 1;
+}
+
+#menu {
+  display: none;
+}
+
+#wish[aria-pressed="true"] {
+  color: var(--green);
+  box-shadow: inset 0 -2px 0 var(--green);
+}
+
+.hero {
+  max-width: 1120px;
+  margin: auto;
+  min-height: 480px;
+  padding: 65px 35px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+}
+
+.hero {
+  overflow-x: clip;
+}
+
+/* Shared letter-spaced labels. Keep this above ".cover small" and ".info small" (same specificity, later rules win) */
+.hero small,
+.catalog small,
+.newsletter small {
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  color: #636960;
+  font-weight: 700;
+}
+
+.hero h1 {
+  font: 500 clamp(48px,6vw,72px)/1.04 var(--font-display);
+  letter-spacing: -2px;
+  margin: 22px 0;
+}
+
+.hero h1 em,
+h2 em,
+.quote em {
+  color: #b66f4a;
+}
+
+.hero p {
+  max-width: 390px;
+  color: #5f655b;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.cta {
+  display: inline-block;
+  background: var(--green);
+  color: white;
+  padding: 14px 18px;
+  text-decoration: none;
+  font-size: 12px;
+  margin-top: 12px;
+}
+
+.hero .proof {
+  font-size: 12px;
+  margin-top: 30px;
+}
+
+.stack {
+  height: 330px;
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.book {
+  position: absolute;
+  width: 155px;
+  height: 235px;
+  padding: 22px 14px;
+  color: white;
+  font: 22px/1.1 var(--font-display);
+  box-shadow: 8px 12px 22px #0002;
+}
+
+.b1 {
+  background: #c6a16f;
+  transform: rotate(12deg) translate(80px,-10px);
+}
+
+.b2 {
+  background: #315d50;
+  transform: rotate(-8deg) translate(-30px,-10px);
+}
+
+.b3 {
+  background: #c8794d;
+  transform: rotate(5deg) translate(50px,55px);
+}
+
+.benefits {
+  border-block: 1px solid var(--line);
+  display: flex;
+  justify-content: center;
+  gap: 9%;
+  padding: 22px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--green);
+}
+
+.benefits small {
+  font-size: 12px;
+  font-weight: 400;
+  color: #636960;
+}
+
+/* =============================================================================
+   4. Catalogue and cards
+   ============================================================================= */
+
+.catalog {
+  max-width: 1120px;
+  margin: auto;
+  padding: 75px 30px;
+}
+
+.heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+
+.heading h2,
+.newsletter h2 {
+  font: 500 clamp(32px,4vw,45px)/1.15 var(--font-display);
+  margin: 13px 0;
+}
+
+.heading p,
+.newsletter p {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+select {
+  padding: 10px;
+  border: 1px solid var(--field-border);
+  background: transparent;
+  color: #555;
+}
+
+.pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 28px 0 20px;
+}
+
+.pills button {
+  border: 1px solid #dedbd2;
+  border-radius: 30px;
+  background: transparent;
+  padding: 9px 14px;
+  font-size: 12px;
+  color: #5f655b;
+  cursor: pointer;
+}
+
+.pills button.active,
+.pills button:hover {
+  background: var(--green);
+  color: white;
+}
+
+.count {
+  font-size: 12px;
+  color: #6b6f67;
+}
+
+.count {
+  overflow-wrap: anywhere;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 28px 20px;
+}
+
+.card {
+  min-width: 0;
+}
+
+.visual {
+  height: 250px;
+  background: #eeece5;
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+
+.cover {
+  width: 132px;
+  height: 195px;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 7px 9px 16px #0003;
+  color: white;
+  transform: rotate(-2deg);
+  text-align: left;
+}
+
+.cover strong {
+  font: 17px/1.1 var(--font-display);
+}
+
+.cover small {
+  font-size: 7px;
+  letter-spacing: 1px;
+}
+
+.midnight {
+  background: linear-gradient(145deg,#1b2d4c,#526b83);
+}
+
+.atomic {
+  background: linear-gradient(140deg,#e8d6ad,#c5a879);
+  color: #273f37;
+}
+
+.money {
+  background: linear-gradient(140deg,#1c4841,#497366);
+}
+
+.ikigai {
+  background: linear-gradient(145deg,#c77b60,#e2b18d);
+}
+
+.code {
+  background: linear-gradient(145deg,#303b47,#657785);
+}
+
+.alchemist {
+  background: linear-gradient(145deg,#1e514b,#8b9d71);
+}
+
+.think {
+  background: linear-gradient(145deg,#b4a0be,#6e6685);
+}
+
+.caterpillar {
+  background: linear-gradient(145deg,#e9c56b,#7baf70);
+  color: #294d37;
+}
+
+/* The art is set inline (48px) in script.js. Three dots with spaces wrap to two lines and push the title and
+   author out of this cover, so this one cover needs a smaller size. !important is needed to beat the inline style. */
+.caterpillar span {
+  font-size: 32px !important;
+}
+
+.tag {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: white;
+  padding: 5px 7px;
+  font-size: 12px;
+  max-width: calc(100% - 64px);
+  line-height: 1.25;
+  z-index: 1;
+}
+
+.heart {
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  border: 0;
+  background: white;
+  border-radius: 50%;
+  width: 29px;
+  height: 29px;
+  font-size: 17px;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.heart.active {
+  color: #bd684e;
+}
+
+.info {
+  padding: 12px 2px;
+}
+
+.info small {
+  font-size: 12px;
+  letter-spacing: .5px;
+  color: #7a5f48;
+}
+
+.info h3 {
+  font: 600 16px var(--font-display);
+  margin: 6px 0;
+}
+
+.author {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.rating {
+  font-size: 12px;
+  color: #8f6320;
+}
+
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.bottom strong {
+  font-size: 13px;
+}
+
+.bottom del {
+  font-size: 12px;
+  color: #6b6f67;
+  margin-left: 6px;
+}
+
+.add {
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--field-border);
+  background: none;
+  color: var(--green);
+  font-size: 19px;
+  cursor: pointer;
+}
+
+.add:hover {
+  background: var(--green);
+  color: white;
+}
+
+/* =============================================================================
+   5. Wishlist bar and empty state
+   ============================================================================= */
+
+.wishbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  background: var(--surface-alt);
+  padding: 12px 16px;
+  margin: 0 0 18px;
+  font-size: 13px;
+  color: var(--ink);
+}
+
+.wishbar p {
+  margin: 0;
+}
+
+.wishbar button,
+.empty button {
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+}
+
+.wishbar button {
+  border: 1px solid var(--green);
+  background: transparent;
+  color: var(--green);
+  padding: 8px 14px;
+}
+
+.wishbar button:hover {
+  background: var(--green);
+  color: white;
+}
+
+.empty {
+  text-align: center;
+  padding: 48px 20px;
+  border: 1px dashed #cfcabd;
+  color: #555a53;
+}
+
+.empty p {
+  margin: 0 0 18px;
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.empty button {
+  border: 0;
+  background: var(--green);
+  color: white;
+  padding: 12px 20px;
+}
+
+/* =============================================================================
+   6. Quote, newsletter and footer
+   ============================================================================= */
+
+.quote {
+  text-align: center;
+  background: var(--surface-alt);
+  padding: 50px 15px;
+  font: 26px var(--font-display);
+}
+
+.quote>p {
+  line-height: 1.3;
+}
+
+.quote>small {
+  font: 12px var(--font-sans);
+  letter-spacing: 2px;
+  color: #636960;
+}
+
+.newsletter {
+  max-width: 1120px;
+  margin: auto;
+  padding: 70px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+}
+
+.newsletter-form {
+  max-width: 430px;
+  width: 100%;
+}
+
+.newsletter form {
+  display: flex;
+  border-bottom: 1px solid var(--field-border);
+  width: 100%;
+}
+
+.newsletter input {
+  flex: 1;
+  min-width: 0;
+  padding: 13px 6px;
+  border: 0;
+  background: transparent;
+}
+
+.newsletter button {
+  background: var(--green);
+  color: white;
+  border: 0;
+  padding: 0 15px;
+  cursor: pointer;
+}
+
+.newsletter .form-msg {
+  margin: 8px 0 0;
+  min-height: 1.5em;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--green);
+  overflow-wrap: anywhere;
+}
+
+.newsletter .form-msg.error {
+  color: var(--error);
+}
+
+.newsletter input[aria-invalid="true"] {
+  box-shadow: inset 0 -2px 0 var(--error);
+}
+
+footer {
+  border-top: 1px solid var(--line);
+  padding: 25px 5%;
+  font-size: 20px;
+}
+
+footer small {
+  float: right;
+  font: 12px var(--font-sans);
+  color: #6b6f67;
+}
+
+/* =============================================================================
+   7. Toast, bag drawer and cart
+   ============================================================================= */
+
+#toast {
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #263f34;
+  color: white;
+  padding: 12px 18px;
+  font-size: 12px;
+  z-index: var(--z-toast);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s;
+}
+
+#toast.show {
+  opacity: 1;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: #17231d80;
+  z-index: var(--z-drawer);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.backdrop[hidden] {
+  display: none;
+}
+
+aside {
+  width: min(420px,100%);
+  height: 100%;
+  overflow: auto;
+  background: var(--cream);
+  padding: 25px;
+}
+
+.close {
+  float: right;
+  border: 0;
+  background: none;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.cart-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+  padding: 14px 0;
+  font-size: 12px;
+}
+
+.cart-row button {
+  border: 1px solid var(--line);
+  background: none;
+  padding: 3px 8px;
+  cursor: pointer;
+}
+
+.cart-row small {
+  display: block;
+  font-size: 12px;
+  color: #6b6f67;
+  margin-top: 5px;
+}
+
+.summary {
+  padding-top: 18px;
+  font-size: 13px;
+}
+
+.summary button {
+  width: 100%;
+  padding: 13px;
+  background: var(--green);
+  color: white;
+  border: 0;
+  margin-top: 12px;
+  cursor: pointer;
+}
+
+.summary small {
+  font-size: 12px;
+}
+
+.cart-row button:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
+
+.cart-row .limit {
+  color: var(--error);
+}
+
+/* =============================================================================
+   8. Accessibility
+   ============================================================================= */
+
+/* Keyboard focus */
+:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+.cta:focus-visible,
+.add:focus-visible,
+.summary button:focus-visible,
+.empty button:focus-visible,
+.newsletter button:focus-visible {
+  box-shadow: 0 0 0 4px var(--cream);
+}
+
+/* Placeholder contrast */
+::placeholder {
+  color: #636960;
+  opacity: 1;
+}
+
+/* Enlarged hit area for the heart button */
+.heart::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+}
+
+/* Minimum 24px targets; the 44px touch sizes are in the responsive section */
+#menu,
+.add,
+.close,
+.cart-row button {
+  min-width: var(--target-min);
+  min-height: var(--target-min);
+}
+
+nav button,
+.actions button,
+.pills button,
+.wishbar button {
+  min-height: var(--target-min);
+}
+
+/* =============================================================================
+   9. Responsive
+   ============================================================================= */
+
+@media (max-width: 1024px) {
+  header {
+    padding: 0 18px;
+    gap: 10px;
+  }
+
+  nav {
+    gap: 9px;
+  }
+
+  .actions input {
+    width: 110px;
+  }
+
+  #menu {
+    display: block;
+    border: 0;
+    background: none;
+    font-size: 20px;
+  }
+
+  nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--cream);
+    padding: 18px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--line);
+  }
+
+  nav.open {
+    display: flex;
+  }
+}
+
+@media (max-width: 950px) {
+  .grid {
+    grid-template-columns: repeat(3,1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  header {
+    height: 65px;
+  }
+
+  .brand {
+    font-size: 19px;
+  }
+
+  .actions input {
+    width: 90px;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 45px 24px 55px;
+  }
+
+  .hero h1 {
+    font-size: 55px;
+  }
+
+  .stack {
+    height: 270px;
+    transform: scale(.85);
+  }
+
+  .benefits {
+    gap: 20px;
+    padding: 16px 8px;
+    font-size: 12px;
+    flex-wrap: wrap;
+  }
+
+  .benefits span {
+    line-height: 1.7;
+  }
+
+  .catalog {
+    padding: 55px 20px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 22px 12px;
+  }
+
+  .visual {
+    height: 195px;
+  }
+
+  .cover {
+    width: 108px;
+    height: 160px;
+  }
+
+  .cover strong {
+    font-size: 14px;
+  }
+
+  .heading {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .heading select {
+    align-self: flex-end;
+  }
+
+  .newsletter {
+    padding: 50px 20px;
+    display: block;
+  }
+
+  .newsletter-form {
+    margin-top: 25px;
+  }
+
+  footer small {
+    float: none;
+    display: block;
+    margin-top: 10px;
+  }
+}
+
+/* Includes the bag-button padding rule that used to sit in a second 480px block (merged; verified identical) */
+@media (max-width: 480px) {
+  header {
+    height: auto;
+    flex-wrap: wrap;
+    padding: 8px 12px;
+    gap: 6px 8px;
+  }
+
+  .actions {
+    display: contents;
+  }
+
+  .actions input {
+    order: 1;
+    flex: 1 0 100%;
+    width: auto;
+    min-width: 0;
+  }
+
+  #wish {
+    margin-left: auto;
+  }
+
+  .cart-row button {
+    padding: 3px 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+  }
+}
+
+/* 44px touch targets on narrow screens and coarse pointers. Must stay after the base 24px min sizes */
+@media (max-width: 900px), (pointer: coarse) {
+  #menu,
+  .actions button,
+  nav button,
+  .pills button,
+  .add,
+  .close,
+  .cart-row button,
+  .cta,
+  .wishbar button,
+  .empty button,
+  .summary button,
+  .newsletter button {
+    min-width: var(--target-touch);
+    min-height: var(--target-touch);
+  }
+
+  select,
+  .actions input,
+  .newsletter input {
+    min-height: var(--target-touch);
+  }
+
+  .cta {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .brand {
+    display: inline-block;
+    padding: 10px 0;
+  }
+
+  .pills button {
+    padding: 9px 16px;
+  }
+}

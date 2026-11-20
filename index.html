@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Chapter &amp; Co. is a friendly online bookstore. Browse fiction, personal growth, technology, business and children's books, save favourites and enjoy free delivery over ₹799.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23254c3c'/%3E%3Cpath d='M16 14h24a8 8 0 0 1 8 8v28H24a8 8 0 0 1-8-8z' fill='%23f7f5f0'/%3E%3Crect x='24' y='22' width='16' height='3' fill='%23254c3c'/%3E%3C/svg%3E">
+  <title>Chapter &amp; Co. | Bookstore</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+
+<div class="announcement"><span aria-hidden="true">✦</span> Free delivery on orders over ₹799</div>
+
+<header>
+  <a class="brand" href="#"><b aria-hidden="true">▤</b> chapter<span>&</span>co.</a>
+  <button id="menu" type="button" aria-label="Toggle menu" aria-controls="nav" aria-expanded="false">☰</button>
+  <nav id="nav" aria-label="Book categories">
+    <button data-category="All books">All books</button>
+    <button data-category="Fiction">Fiction</button>
+    <button data-category="Personal Growth">Personal Growth</button>
+    <button data-category="Technology">Technology</button>
+    <button data-category="Business">Business</button>
+    <button data-category="Children">Children</button>
+  </nav>
+  <div class="actions">
+    <input id="search" placeholder="Search books..." aria-label="Search books">
+    <button id="wish" aria-pressed="false" aria-label="Wishlist, 0 saved"><span id="wishIcon" aria-hidden="true">♡</span> <sup id="wishCount">0</sup></button>
+    <button id="cart" type="button" aria-haspopup="dialog" aria-label="Bag, 0 items">Bag <sup id="cartCount">0</sup></button>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero">
+    <div>
+      <small>YOUR NEXT CHAPTER STARTS HERE</small>
+      <h1>Find the book<br>that <em>finds you.</em></h1>
+      <p>Thoughtful reads, fresh perspectives, and stories worth staying up for. Your next favourite is just a page away.</p>
+      <a class="cta" href="#books">Explore the collection <span aria-hidden="true">→</span></a>
+      <p class="proof"><span aria-hidden="true">✦</span> Loved by 12,000+ readers</p>
+    </div>
+    <div class="stack" aria-hidden="true">
+      <div class="book b1">THE ART OF<br>SLOW LIVING</div>
+      <div class="book b2">THE<br>CREATIVE<br>ACT</div>
+      <div class="book b3">MAKE<br>SPACE FOR<br>WONDER</div>
+    </div>
+  </section>
+
+  <section class="benefits">
+    <span><span aria-hidden="true">♧</span> Free delivery<br><small>Orders over ₹799</small></span>
+    <span><span aria-hidden="true">◇</span> Secure checkout<br><small>Your details stay safe</small></span>
+    <span><span aria-hidden="true">☏</span> Reader support<br><small>Here when you need us</small></span>
+  </section>
+
+  <section id="books" class="catalog">
+    <div class="heading">
+      <div>
+        <small>THE BOOKSHELF</small>
+        <h2>Stories for every <em>side of you.</em></h2>
+        <p>Handpicked titles to inspire, entertain, and stay with you.</p>
+      </div>
+      <select id="sort" aria-label="Sort books">
+        <option value="featured">Featured</option>
+        <option value="rating">Top rated</option>
+        <option value="low">Price: low to high</option>
+        <option value="high">Price: high to low</option>
+      </select>
+    </div>
+    <div id="pills" class="pills"></div>
+    <div id="wishBar" class="wishbar" hidden>
+      <p id="wishBarText"></p>
+      <button id="wishExit" type="button">Show all books</button>
+    </div>
+    <p id="count" class="count" aria-live="polite"></p>
+    <div id="grid" class="grid"></div>
+    <div id="empty" class="empty" hidden>
+      <p id="emptyMsg"></p>
+      <button id="emptyAction" type="button"></button>
+    </div>
+  </section>
+
+  <section class="quote">
+    <span aria-hidden="true">“</span>
+    <p>Reading gives us someplace to go<br><em>when we have to stay where we are.</em></p>
+    <small>— MASON COOLEY</small>
+  </section>
+
+  <section class="newsletter">
+    <div>
+      <small>A NOTE FROM OUR BOOKSHELF</small>
+      <h2>Good things come<br>to <em>those who read.</em></h2>
+      <p>Get reading recommendations and new arrivals in your inbox.</p>
+    </div>
+    <div class="newsletter-form">
+      <form id="subscribe" novalidate>
+        <input id="email" type="email" required autocomplete="email" placeholder="you@example.com" aria-label="Email address" aria-describedby="newsletterMsg">
+        <button type="submit">Subscribe <span aria-hidden="true">→</span></button>
+      </form>
+      <p id="newsletterMsg" class="form-msg" aria-live="polite" aria-atomic="true"></p>
+    </div>
+  </section>
+
+</main>
+
+<footer>chapter<span>&</span>co. <small>For the love of a good story. · © 2026</small></footer>
+
+<div id="toast" role="status"></div>
+
+<div id="drawer" class="backdrop" hidden>
+  <aside role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+    <button id="close" class="close" type="button" aria-label="Close book bag"><span aria-hidden="true">×</span></button>
+    <h2 id="drawerTitle">Your book bag</h2>
+    <p id="cartStatus" class="sr-only" aria-live="polite" aria-atomic="true"></p>
+    <div id="cartItems"></div>
+    <div id="summary"></div>
+  </aside>
+</div>
+
+</body>
+</html>

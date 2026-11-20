@@ -1,0 +1,15 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor and IDE settings
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Environment variables and secrets
+.env
+.env.*
+_verify/
